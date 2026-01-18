@@ -15,16 +15,22 @@
     }
 
     .glass {
-        background: rgba(255, 255, 255, 0.03);
+        background: rgba(255, 255, 255, 0.09);
         backdrop-filter: blur(12px);
         border: 1px solid rgba(255, 255, 255, 0.05);
     }
+
+        .glass:hover, .glass:focus-within {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(109, 40, 217, 0.5);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
 
     .btn-violet {
         background-color: #6d28d9;
         transition: all 0.3s ease;
     }
-
+    
         .btn-violet:hover {
             background-color: #7c3aed;
             box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
@@ -38,6 +44,23 @@
     .toast-in {
         animation: slideIn 0.5s ease-out forwards;
     }
+
+    .bg-violet{
+        background-color: #6d28d9;
+    }
+
+    select option {
+        background-color: #111827;
+        color: #ffffff;
+        font-family: 'Urbanist', sans-serif;
+        font-weight: 600;
+        padding: 12px;
+    }
+
+        select option[value="All"] {
+            color: #a78bfa;
+            font-weight: 800;
+        }
 
     @@keyframes slideIn {
         from {
@@ -64,42 +87,72 @@
     </div>
 
     <header class="flex justify-between items-center mb-10">
-        <h1 class="text-2xl font-black tracking-tighter uppercase">Film<span class="text-violet-500 italic">Archive</span></h1>
-        <button onclick="document.getElementById('createModal').showModal()" class="bg-white text-black px-6 py-2 rounded-lg font-black text-[10px] uppercase tracking-widest hover:bg-violet-500 hover:text-white transition-all">+ New Archive</button>
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/20 rotate-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z" />
+                    <path d="m6.2 5.3 3.1 3.9" />
+                    <path d="m12.4 3.4 3.1 4" />
+                    <path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
+                </svg>
+            </div>
+
+            <div>
+                <h1 class="text-2xl font-black tracking-tight text-white uppercase">
+                    Film<span class="text-indigo-500 italic">Archive</span>
+                </h1>
+            </div>
+        </div>
+
+        <button onclick="document.getElementById('createModal').showModal()"
+                class="bg-white text-black px-6 py-2.5 rounded-lg font-black text-[10px] uppercase tracking-widest hover:bg-violet-500 hover:text-white transition-all">
+            + New Archive
+        </button>
     </header>
 
     <section class="mb-12">
-        <form method="get" class="glass rounded-full p-2 flex items-center gap-3 max-w-4xl mx-auto shadow-2xl">
-            @* Search Input *@
+        <form method="get" class="glass rounded-full p-2 flex items-center gap-3 max-w-4xl mx-auto shadow-2xl border border-white/10">
+
+            @* Search Input Area *@
             <div class="flex-1 flex items-center px-6">
-                <svg class="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
-                <input name="searchTerm" placeholder="Search movie or series..." class="bg-transparent border-none text-white w-full focus:ring-0 px-4 py-3 font-semibold text-sm" />
+                <input name="searchTerm"
+                       placeholder="Search movie or series..."
+                       class="bg-transparent border-none outline-none text-white w-full focus:ring-0 px-4 py-3 font-semibold text-sm placeholder:text-zinc-500" />
             </div>
 
-            @* Genre Dropdown with Custom Positioned Arrow *@
-            <div class="relative">
-                <select name="genre" class="bg-white text-black border-none rounded-full pl-6 pr-10 py-3 text-[10px] font-black uppercase tracking-widest outline-none cursor-pointer appearance-none w-[120px]">
-                    <option value="All">GENRES</option>
+           
+            <div class="relative flex items-center group">
+                <select name="genre" onchange="this.form.submit()"
+                        class="bg-gradient-to-r from-violet-600 to-indigo-600 text-white border-none rounded-full pl-6 pr-11 py-3 text-[10px] font-black uppercase tracking-widest outline-none cursor-pointer appearance-none w-auto min-w-[120px] transition-all hover:brightness-110 shadow-lg shadow-indigo-900/20">
+
+                    <option value="All" selected="@(Context.Request.Query["genre"] == "All" ? "selected" : null)">
+                        GENRES
+                    </option>
+
                     @if (ViewBag.Genres != null)
                     {
                         foreach (var genre in ViewBag.Genres)
                         {
-                            <option value="@genre">@genre.ToUpper()</option>
+                            <option value="@genre" selected="@(Context.Request.Query["genre"] == genre.ToString() ? "selected" : null)">
+                                @genre.ToUpper()
+                            </option>
                         }
                     }
                 </select>
-                @* This SVG is your arrow. I've moved it slightly inward using 'right-4' *@
+
                 <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none">
-                    <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
+                    <svg class="w-3.5 h-3.5 text-white transition-transform duration-300 ease-out peer-focus:rotate-180"
+                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </div>
             </div>
 
-            @* Icon-Only Search Button *@
-            <button type="submit" class="btn-violet text-white h-[44px] w-[44px] flex items-center justify-center rounded-full transition-all">
+            @* Search Icon Button *@
+            <button type="submit" class="btn-violet text-white h-[46px] w-[46px] flex items-center justify-center rounded-full hover:scale-105 active:scale-95 transition-all shadow-lg shadow-violet-900/20">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -107,14 +160,99 @@
             </button>
         </form>
     </section>
+    
 
     <section class="flex flex-wrap items-center justify-center gap-4 mb-12">
         <div class="glass p-1.5 rounded-xl flex gap-1">
-            <a href="@Url.Action("Index", new { category = "All" })" class="px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest @(Context.Request.Query["category"] == "All" || string.IsNullOrEmpty(Context.Request.Query["category"]) ? "bg-violet-600" : "hover:bg-zinc-800")">All</a>
-            <a href="@Url.Action("Index", new { category = "Movie" })" class="px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest @(Context.Request.Query["category"] == "Movie" ? "bg-violet-600" : "hover:bg-zinc-800")">Movie</a>
-            <a href="@Url.Action("Index", new { category = "Series" })" class="px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest @(Context.Request.Query["category"] == "Series" ? "bg-violet-600" : "hover:bg-zinc-800")">Series</a>
+            <a href="@Url.Action("Index", new { category = "All" })"
+               class="px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest @(Context.Request.Query["category"] == "All" || string.IsNullOrEmpty(Context.Request.Query["category"]) ? "bg-violet-600 text-white" : "text-zinc-400 hover:bg-zinc-800 hover:text-white")">
+                All
+            </a>
+            <a href="@Url.Action("Index", new { category = "Movie" })"
+               class="px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest @(Context.Request.Query["category"] == "Movie" ? "bg-violet-600 text-white" : "text-zinc-400 hover:bg-zinc-800 hover:text-white")">
+                Movie
+            </a>
+            <a href="@Url.Action("Index", new { category = "Series" })"
+               class="px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest @(Context.Request.Query["category"] == "Series" ? "bg-violet-600 text-white" : "text-zinc-400 hover:bg-zinc-800 hover:text-white")">
+                Series
+            </a>
+        </div>
+
+        <div class="relative">
+            <button onclick="toggleFilters(event)"
+                    class="glass p-1 rounded-xl px-6 py-2 text-[10px] font-black uppercase tracking-widest flex items-center gap-2 text-white hover:bg-violet-600 transition-all">
+                <span>More Filters</span>
+                <svg id="filterChevron" class="w-3.5 h-3.5 transition-transform duration-300 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+
+            <div id="filterDropdown" class="hidden absolute top-full left-0 mt-3 w-52 bg-zinc-900/90 backdrop-blur-xl rounded-2xl p-2 z-[60] shadow-2xl border border-white/20">
+            <div class="p-2 space-y-1">
+
+                    <a href="@Url.Action("Index", new { sortBy = "year_newest", category = Context.Request.Query["category"] })"
+                       class="flex justify-between items-center px-4 py-3 rounded-xl text-[10px] font-black text-white hover:bg-violet-600 transition-all uppercase tracking-widest group">
+                        Year (Newest)
+                        <span class="opacity-0 group-hover:opacity-100 transition-opacity">🔼</span>
+                    </a>
+
+                    <a href="@Url.Action("Index", new { sortBy = "year_oldest", category = Context.Request.Query["category"] })"
+                       class="flex justify-between items-center px-4 py-3 rounded-xl text-[10px] font-black text-white hover:bg-violet-600 transition-all uppercase tracking-widest group">
+                        Year (Oldest)
+                        <span class="opacity-0 group-hover:opacity-100 transition-opacity">🔽</span>
+                    </a>
+
+                    <div class="h-px bg-white/10 my-2"></div>
+
+                    <a href="@Url.Action("Index", new { sortBy = "rating", category = Context.Request.Query["category"] })"
+                       class="flex justify-between items-center px-4 py-3 rounded-xl text-[10px] font-black text-white hover:bg-violet-600 transition-all uppercase tracking-widest group">
+                        Top Rated
+                        <span class="opacity-0 group-hover:opacity-100 transition-opacity">★</span>
+                    </a>
+
+                    <a href="@Url.Action("Index", new { sortBy = "alphabetical", category = Context.Request.Query["category"] })"
+                       class="flex justify-between items-center px-4 py-3 rounded-xl text-[10px] font-black text-white hover:bg-violet-600 transition-all uppercase tracking-widest group">
+                        A-Z Order
+                        <span class="opacity-0 group-hover:opacity-100 transition-opacity">A</span>
+                    </a>
+
+                    <div class="h-px bg-white/10 my-2"></div>
+
+                    <a href="@Url.Action("Index")"
+                       class="block px-4 py-3 rounded-xl text-[10px] font-black text-red-400 hover:bg-red-500/10 transition-colors uppercase tracking-widest text-center">
+                        Reset All Filters
+                    </a>
+                </div>
+            </div>
         </div>
     </section>
+
+    @* --- DYNAMIC SEARCH HEADER --- *@
+    @if (!string.IsNullOrEmpty(Context.Request.Query["searchTerm"]) ||
+        (Context.Request.Query["genre"] != "All" && !string.IsNullOrEmpty(Context.Request.Query["genre"])))
+    {
+        <div class="mb-10 animate-in fade-in slide-in-from-left-5 duration-500">
+            <div class="flex items-center gap-4 mb-2">
+                <div class="w-1.5 h-8 bg-violet-600 rounded-full shadow-[0_0_15px_rgba(109,40,217,0.5)]"></div>
+
+                <h2 class="text-2xl font-black tracking-tight text-white uppercase">
+                    @if (!string.IsNullOrEmpty(Context.Request.Query["searchTerm"]))
+                    {
+                        <span>Results for <span class="text-violet-500 italic">"@Context.Request.Query["searchTerm"]"</span></span>
+                    }
+                    else
+                    {
+                        <span>Browsing <span class="text-violet-500 italic">@Context.Request.Query["genre"]</span></span>
+                    }
+                </h2>
+            </div>
+
+            @* Results Count Indicator *@
+            <p class="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em] ml-6">
+                @Model.Count() Results Found
+            </p>
+        </div>
+    }
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
         @foreach (var item in Model)
@@ -177,7 +315,7 @@
 
         @* Title *@
         <div>
-            <label class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2 ml-1">Official Title</label>
+            <label class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2 ml-1">Title</label>
             <input name="Title" placeholder="e.g. Interstellar" class="w-full bg-black/40 border border-zinc-700 rounded-xl py-3.5 px-5 font-bold focus:border-violet-500 outline-none transition-all" required />
         </div>
 
@@ -210,11 +348,11 @@
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2 ml-1">Release Year</label>
-                <input name="ReleaseYear" type="number" value="2014" class="w-full bg-black/40 border border-zinc-700 rounded-xl p-3 font-bold focus:border-violet-500 outline-none" />
+                <input name="ReleaseYear" placeholder="e.g. 2026" type="number" class="w-full bg-black/40 border border-zinc-700 rounded-xl py-3 px-5 font-bold focus:border-violet-500 outline-none transition-all" />
             </div>
             <div>
                 <label class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2 ml-1">Rating (1-5)</label>
-                <input name="Rating" placeholder="1-5" type="number" step="0.1" min="1.0" max="5.0" value="5.0" class="w-full bg-black/40 border border-zinc-700 rounded-xl p-3 font-bold focus:border-violet-500 outline-none" />
+                <input name="Rating" placeholder="1-5" type="number" step="0.1" min="1.0" max="5.0" value="5.0" class="w-full bg-black/40 border border-zinc-700 rounded-xl py-3 px-5 font-bold focus:border-violet-500 outline-none transition-all" />
             </div>
         </div>
 
@@ -234,7 +372,6 @@
 @* --- MODAL: EDIT ENTRY --- *@
 <dialog id="editModal" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-0 text-white w-full max-w-lg shadow-2xl overflow-hidden">
     <div class="p-8 border-b border-zinc-800 flex justify-between items-center">
-        @* Added id="editModalTitle" here *@
         <h2 id="editModalTitle" class="text-xl font-black uppercase text-violet-400">Update Entry</h2>
         <button onclick="document.getElementById('editModal').close()" class="text-zinc-500 hover:text-white">✕</button>
     </div>
@@ -286,11 +423,11 @@
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2 ml-1">Release Year</label>
-                <input name="ReleaseYear" id="editYear" type="number" class="w-full bg-black/40 border border-zinc-700 rounded-xl p-3 font-bold focus:border-violet-500 outline-none" />
+                <input name="ReleaseYear" id="editYear" type="number" class="w-full bg-black/40 border border-zinc-700 rounded-xl py-3 px-5 font-bold focus:border-violet-500 outline-none transition-all" />
             </div>
             <div>
                 <label class="block text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2 ml-1">Rating  (1-5)</label>
-                <input name="Rating" id="editRating" type="number" step="0.1" min="1.0" max="5.0" class="w-full bg-black/40 border border-zinc-700 rounded-xl p-3 font-bold focus:border-violet-500 outline-none" />
+                <input name="Rating" id="editRating" type="number" step="0.1" min="1.0" max="5.0" class="w-full bg-black/40 border border-zinc-700 rounded-xl py-3 px-5 font-bold focus:border-violet-500 outline-none transition-all" />
             </div>
         </div>
 
@@ -355,4 +492,23 @@
             setTimeout(() => t.remove(), 600);
         });
     }, 4000);
+
+        function toggleFilters(event) {
+        event.stopPropagation();
+        const dropdown = document.getElementById('filterDropdown');
+        const chevron = document.getElementById('filterChevron');
+
+        dropdown.classList.toggle('hidden');
+        chevron.classList.toggle('rotate-180');
+    }
+
+    window.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('filterDropdown');
+        const chevron = document.getElementById('filterChevron');
+
+        if (!dropdown.contains(e.target)) {
+            dropdown.classList.add('hidden');
+            chevron.classList.remove('rotate-180');
+        }
+    });
 </script>
