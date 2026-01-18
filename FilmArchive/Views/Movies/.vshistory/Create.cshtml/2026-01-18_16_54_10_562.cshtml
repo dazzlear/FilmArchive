@@ -1,0 +1,15 @@
+﻿@model FilmArchive.Models.Movie  <!-- Ensure this model is declared at the top -->
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label for="Title">Title</label>
+        <input type="text" class="form-control" id="Title" name="Title" value="@Model.Title" />
+    </div>
+    <div class="form-group">
+        <label for="Director">Director</label>
+        <input type="text" class="form-control" id="Director" name="Director" value="@Model.Director" />
+    </div>
+    <button type="submit" class="btn btn-primary">Add Movie</button>
+</form>

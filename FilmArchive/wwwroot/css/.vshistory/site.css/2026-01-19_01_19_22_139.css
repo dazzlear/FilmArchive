@@ -1,0 +1,67 @@
+body {
+    background-color: #000000;
+    font-family: 'Urbanist', sans-serif;
+    color: #fff;
+}
+
+.glass {
+    background: rgba(255, 255, 255, 0.09);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+    .glass:hover, .glass:focus-within {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(109, 40, 217, 0.5);
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+.btn-violet {
+    background-color: #6d28d9;
+    transition: all 0.3s ease;
+}
+
+    .btn-violet:hover {
+        background-color: #7c3aed;
+        box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
+    }
+
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+}
+
+.toast-in {
+    animation: slideIn 0.5s ease-out forwards;
+}
+
+.bg-violet {
+    background-color: #6d28d9;
+}
+
+select:focus + div svg,
+select:active + div svg {
+    transform: rotate(180deg);
+}
+
+.peer:focus ~ div svg {
+    transform: rotate(180deg);
+}
+
+select option {
+    background-color: #18181b; 
+    color: #ffffff;
+    padding: 10px; 
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}

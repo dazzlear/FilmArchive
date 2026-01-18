@@ -1,0 +1,12 @@
+{
+    "ConnectionStrings": {
+      "FilmArchiveConnection": "Server=localhost;Database=FilmArchiveDb;Trusted_Connection=True;"
+    },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}

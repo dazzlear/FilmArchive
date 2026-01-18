@@ -1,0 +1,31 @@
+﻿@model FilmArchive.Models.Movie
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="Title">Title</label>
+        <input type="text" class="form-control" id="Title" name="Title" value="@Model.Title" />
+    </div>
+    <div class="form-group">
+        <label for="Director">Director</label>
+        <input type="text" class="form-control" id="Director" name="Director" value="@Model.Director" />
+    </div>
+    <div class="form-group">
+        <label for="Genre">Genre</label>
+        <input type="text" class="form-control" id="Genre" name="Genre" value="@Model.Genre" />
+    </div>
+    <div class="form-group">
+        <label for="ReleaseYear">Release Year</label>
+        <input type="number" class="form-control" id="ReleaseYear" name="ReleaseYear" value="@Model.ReleaseYear" />
+    </div>
+    <div class="form-group">
+        <label for="Rating">Rating</label>
+        <input type="number" step="0.1" class="form-control" id="Rating" name="Rating" value="@Model.Rating" min="0" max="10" />
+    </div>
+    <div class="form-group">
+        <label for="ImageUrl">Movie Poster</label>
+        <input type="file" class="form-control" id="ImageUrl" name="ImageUrl" />
+    </div>
+    <button type="submit" class="btn btn-primary">Add Movie</button>
+</form>
